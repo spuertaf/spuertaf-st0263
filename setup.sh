@@ -18,7 +18,7 @@ git clone https://github.com/spuertaf/spuertaf-st0263.git
 echo "[x] Repositorio de codigo clonado"
 
 #dirigiendome al directorio de codigo
-cd st0263
+cd spuertaf-st0263
 
 #creando un nuevo entorno virtual
 python -m venv venv
