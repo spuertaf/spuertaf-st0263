@@ -22,7 +22,7 @@ def check_existing_settings(
 def rename_2_current_OS(folder_path:str) -> str:
     current_OS = platform.system()
     if current_OS == 'Windows':
-        folder_path.replace('/','\\')
+        folder_path = folder_path.replace('/','\\')
     elif current_OS == 'Linux':
-        folder_path.replace('\\','/')
+        folder_path = folder_path.replace('\\','/')
     return folder_path
