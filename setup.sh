@@ -20,8 +20,11 @@ echo "[x] Repositorio de codigo clonado"
 #dirigiendome al directorio de codigo
 cd spuertaf-st0263
 
+#instalando dependencia para creacion de entornos virtuales
+sudo apt install python3-venv
+
 #creando un nuevo entorno virtual
-python -m venv venv
+python3 -m venv venv
 echo "[x] Nuevo entorno virtual creado"
 
 #ejecutando el entorno virtual
@@ -30,10 +33,3 @@ source venv/bin/activate
 #instalando librerias necesarias
 pip install -r requirements.txt
 echo "[x] Librerias necesarias instaladas"
-
-#pidiendo al usuario que servicio quiere ejecutar
-echo "Digite el nombre del servicio a ejecutar: manager, list_files, search_files"
-read servicio
-
-#ejecutando el programa
-python -m src.main --service servicio

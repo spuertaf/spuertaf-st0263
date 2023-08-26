@@ -1,4 +1,5 @@
 from typing import Union
+import platform
 
 from typeguard import typechecked, TypeCheckError
 from dynaconf import Dynaconf
@@ -16,3 +17,8 @@ def check_existing_settings(
         if service_settings:
             return service_settings
         raise ValueError(f"Service settings not found or empty on file: {settings_file_name}\n Service name must match service settings name on config file.")
+
+    
+def check_current_OS() -> str:
+    current_OS = platform.system()
+    return current_OS

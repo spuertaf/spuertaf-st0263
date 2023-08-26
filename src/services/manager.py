@@ -34,6 +34,7 @@ class ManagerService(Service):
     
     
     #checkear que existan response settings OK status y ERROR status
+    #checkear que exista host, y puerto 
     def validate_config(self) -> Union[ValueError, None]:
         ...
     
@@ -118,7 +119,10 @@ class ManagerService(Service):
     
     
     def execute(self):
-        self.__service.run()
+        self.__service.run(
+            host = self.__settings.get("host"),
+            port = self.__settings.get("port")
+        )
     
     
     def get_name(self):

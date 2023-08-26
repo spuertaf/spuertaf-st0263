@@ -1,10 +1,11 @@
 from ..service import Service
 from typing import Union
 from concurrent import futures
+import logging
+from ..utils import check_current_OS
 import os
 from .configs.contracts import list_files_service_pb2_grpc
-from .configs.contracts.list_files_service_pb2 import ListFilesRequest, ListFilesResponse
-import logging 
+from .configs.contracts.list_files_service_pb2 import ListFilesRequest, ListFilesResponse 
 
 from typeguard import typechecked, TypeCheckError
 from grpc._server import _Server as GrpcServer
@@ -64,7 +65,11 @@ class ListFilesService(Service):
     def make_response(self, _:ListFilesRequest, context) -> ListFilesResponse:
         #la peticion solicitada es vacia, por esto el campo request es _
         logging.info(f"New request received from peer: {context.peer()}")
-        data_folder_path = f"src\{self.__settings.get('data-folder-name')}"
+        current_OS = check_current_OS()
+        if current_OS == "Linux":
+            data_folder_path = f"src/{self.__settings.get('data-folder-name')}"
+        elif current_OS == "Windows":
+            data_folder_path = f"src\{self.__settings.get('data-folder-name')}"
         all_files_in_folder = [file for file in os.listdir(data_folder_path) if os.path.isfile(os.path.join(data_folder_path, file))]
         return ListFilesResponse(
             status_code=self.__settings.get('response')["OK-status"],

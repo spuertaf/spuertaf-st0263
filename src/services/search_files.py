@@ -1,10 +1,11 @@
 from ..service import Service
 from typing import Union
 from concurrent import futures
+import logging
+from ..utils import check_current_OS
 import os
 from .configs.contracts import search_files_service_pb2_grpc
 from .configs.contracts.search_files_service_pb2 import SearchFilesRequest, SearchFilesResponse 
-import logging
 import fnmatch
 
 from typeguard import typechecked, TypeCheckError
@@ -66,7 +67,11 @@ class SearchFilesService(Service):
         
     def make_response(self, request:SearchFilesRequest, context) -> SearchFilesResponse:
         logging.info(f"New request received from peer: {context.peer()}")
-        data_folder_path = f"src\{self.__settings.get('data-folder-name')}"
+        current_OS = check_current_OS()
+        if current_OS == "Linux":
+            data_folder_path = f"src/{self.__settings.get('data-folder-name')}"
+        elif current_OS == "Windows":
+            data_folder_path = f"src\{self.__settings.get('data-folder-name')}"
         all_files_in_folder = [file for file in os.listdir(data_folder_path) if os.path.isfile(os.path.join(data_folder_path, file))]
         search_pattern = request.file_to_search_pattern
         found_files = [file for file in all_files_in_folder if fnmatch.fnmatch(file, search_pattern)]
