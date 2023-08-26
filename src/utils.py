@@ -19,6 +19,10 @@ def check_existing_settings(
         raise ValueError(f"Service settings not found or empty on file: {settings_file_name}\n Service name must match service settings name on config file.")
 
     
-def check_current_OS() -> str:
+def rename_2_current_OS(folder_path:str) -> str:
     current_OS = platform.system()
-    return current_OS
+    if current_OS == 'Windows':
+        folder_path.replace('\\','/')
+    elif current_OS == 'Linux':
+        folder_path.replace('/','\\')
+    return folder_path
