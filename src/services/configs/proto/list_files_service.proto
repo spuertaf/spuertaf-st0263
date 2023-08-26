@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package list_files;
+
+message ListFilesRequest {
+
+}
+
+message ListFilesResponse {
+    int32 status_code = 1;
+    repeated string files = 2;
+}
+
+service ListFilesService {
+    rpc make_response (ListFilesRequest) returns (ListFilesResponse);
+}

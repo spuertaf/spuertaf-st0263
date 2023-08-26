@@ -1,0 +1,40 @@
+{
+    "list-files-service":{
+        "data-folder-name" : "data",
+        "end-point" : "[::]:8080",
+        "response" : {
+            "OK-status":200,
+            "ERROR-status":400
+        },
+        "kafka-server" : ""
+    },
+
+    "search-files-service":{
+        "data-folder-name" : "data",
+        "end-point" : "[::]:8080",
+        "response" : {
+            "OK-status":200,
+            "ERROR-status":400
+        },
+        "kafka-server" : ""
+    },
+
+    "manager-service":{
+        "end-points" : {
+            "/list-files" : ["service", "arguments"]
+        },
+        "services" : ["list-files","search-files"],
+        "redirect": {
+            "list-files" : "127.0.0.1:8080",
+            "search-files" : "127.0.0.1:8080"
+        },
+        "response" : {
+            "OK-status":200,
+            "ERROR-status":400
+        }
+    },
+
+    "command" : {
+        "services" : ["list-files","search-files","manager"]
+    }
+}

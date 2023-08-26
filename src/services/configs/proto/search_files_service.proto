@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package search_files;
+
+message SearchFilesRequest {
+    string file_to_search_pattern = 1;
+}
+
+message SearchFilesResponse {
+    int32 status_code = 1;
+    repeated string files = 2;
+}
+
+service SearchFiles { 
+    rpc make_response(SearchFilesRequest) returns (SearchFilesResponse);
+}

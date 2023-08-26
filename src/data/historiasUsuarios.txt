@@ -1,0 +1,40 @@
+Historias de Usuario:
+
+    1) Como asistente al evento NEXT, quiero obtener una ruta que permita mi desplazamiento a través de los stands, contribuya a mi experiencia y me permita ganarme un boleto a la carpa sensorial.
+    2) Como asistente al evento, quiero acceder a mi ruta en cualquier momento del día.
+    3) Como asistente al evento, quiero tener una ruta personalizada basada en un test de personalidad.
+    4) Como asistente al evento, quiero poder registrarme en la página del evento.
+    5) Como asistente al evento, quiero recibir un correo de confirmación al crear una cuenta.
+    6) Como asistente al evento, quiero poder escanear llaves que me desbloqueen la siguiente parte del recorrido.
+    7) Como asistente al evento, quiero poder ganarme un boleto a la carpa sensorial.
+    8) Como asistente al evento, quiero tener una forma visual para interactuar con el evento.
+    9) Como organizador del evento, quiero tener acceso a los datos relacionados con el registro de los asistentes.
+    10) Como asistente al evento, quiero recibir un correo con el boleto cuando complete mi ruta designada.
+
+Involucrados:
+
+    Backend
+    Frontend (Coordinadoras de experiencia, estrategia y marca)
+    Backend
+    Backend
+    Backend
+    Backend
+    Frontend y UX/UI
+    ¿Frontend? y Backend
+
+Criterios de Aceptación:
+
+    1) Interfaz clara, bonita y amigable con el usuario. A su vez, debe utilizar la paleta de colores propia del evento.
+    Definición de bonito: Que lo haga higuita
+    2) El sistema debe permitir el registro y inicio de sesión correctos de los usuarios.
+    3) El sistema debe asegurar la persistencia y calidad de los datos ingresados durante el registro de los usuarios.
+    4) El sistema debe permitir que el usuario realice el test de personalidad una única vez.
+    5) El sistema debe mostrar la ruta del usuario basada en su test de personalidad.
+    6) El sistema debe permitir el escaneo de las llaves que permitan desbloquear una nueva parte de la ruta.
+    7) El sistema debe permitir ver el progreso de la ruta (stands visitados y siguientes no desbloqueados).
+    Estados del stand: Bloqueado (el usuario no ha visitado el stand inmediatamente anterior), Visitado (el usuario ya ha escaneado su llave), Desbloqueado (es el próximo stand al que el usuario debe ir). PD (Centrar esto)
+    8) El sistema debe validar cuando el usuario complete la ruta.
+    Completar la ruta: cuando todos los stands están en estado visitado.
+    9) Si se cumple el criterio 7), el sistema debe enviar al correo del usuario un boleto para la carpa sensorial.
+    10) El sistema debe cumplir con los requisitos pertinentes sobre seguridad informática.
+    11) El sistema debe permitir al organizador visualizar los usuarios y su estado actual en sus respectivas rutas.
