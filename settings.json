@@ -25,8 +25,8 @@
         },
         "services" : ["list-files","search-files"],
         "redirect": {
-            "list-files" : "35.175.214.8:8080",
-            "search-files" : "127.0.0.1:8080"
+            "list-files" : "34.198.41.234:8080",
+            "search-files" : "52.54.127.116:8080"
         },
         "response" : {
             "OK-status":200,
