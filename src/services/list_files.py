@@ -1,10 +1,12 @@
-from ..service import Service
+from ..interfaces.grpc_service import GrpcService
 from typing import Union
 from concurrent import futures
 import logging
-from ..utils import rename_2_current_OS
+from ..scripts.utils import rename_2_current_OS
 import os
 from .configs.contracts import list_files_service_pb2_grpc
+from ..patterns.rabbitmq import RabbitMQConnector
+import json
 from .configs.contracts.list_files_service_pb2 import ListFilesRequest, ListFilesResponse 
 
 from typeguard import typechecked, TypeCheckError
@@ -13,7 +15,7 @@ import grpc
 from dynaconf.utils.boxing import DynaBox as ServiceSettings
 
 
-class ListFilesService(Service):
+class ListFilesService(GrpcService):
     @typechecked
     def __init__(self, name:str = "list-files-service", settings_file_name:str = "settings.json"):
         self.__name = name
@@ -46,13 +48,61 @@ class ListFilesService(Service):
             raise ValueError("Data folder must be a directory")
     
     
-    def on_startup(self):
-        self.__public_ip = super().on_startup()
+    def get_mi_ip(self) -> str:
+        self.__public_ip = super().get_mi_ip()
     
-    
+
     def add_server_functions(self):
-        #añadir las funcionalidades de la clase al servidor
-        list_files_service_pb2_grpc.add_ListFilesServiceServicer_to_server(ListFilesService(), self.__service)
+            #añadir las funcionalidades de la clase al servidor
+            list_files_service_pb2_grpc.add_ListFilesServiceServicer_to_server(ListFilesService(), self.__service)
+
+    
+    def conf_rabbitmq_connection(self, rabbitmq_connector:RabbitMQConnector):
+        rabbitmq_connector.establish_connection(
+            host=self.__settings.get("rabbitmq").get("server"),
+            port=self.__settings.get("rabbitmq").get("port")
+    
+        )
+        rabbitmq_connector.establish_channel()
+        self.__rabbitmq_connector = rabbitmq_connector
+    
+    #revisar esto
+    def handle_pending_requests(
+        self, 
+        rabbitmq_connector:RabbitMQConnector,
+        queue_name_2_publish:str,
+        pending_requests:list 
+    ) -> list:
+        if len(pending_requests) == 0:
+            return pending_requests
+        #function takes the first element of the list and then the list gets updated
+        pending_request_reponse = self.make_response(
+            None,
+            context="rabbitmq"
+        )
+        
+        pending_request:json = pending_requests[0]
+        pending_request['response'] = pending_request_reponse.files
+        
+        rabbitmq_connector.publish(
+            queue_name=queue_name_2_publish, #must be in settings
+            message= str(pending_request),
+        )
+        print(pending_requests)
+        pending_requests.pop(0)
+        return self.handle_pending_requests(rabbitmq_connector, queue_name_2_publish, pending_requests)
+        
+        
+    def on_startup(
+        self,
+        on_startup_function:callable
+    ) -> None:
+        super().on_startup(
+            rabbitmq_connector=self.__rabbitmq_connector, 
+            queue_name_2_consume = self.__settings.get("rabbitmq").get("pending-requests-topic"),
+            queue_name_2_publish = self.__settings.get("rabbitmq").get("resolved-pending-requests-topic"),
+            on_startup_function=on_startup_function
+        )
          
     
     @typechecked
@@ -64,7 +114,7 @@ class ListFilesService(Service):
         
     def make_response(self, _:ListFilesRequest, context) -> ListFilesResponse:
         #la peticion solicitada es vacia, por esto el campo request es _
-        logging.info(f"New request received from peer: {context.peer()}")
+        logging.info(f"New request received from peer: {context}")
         data_folder_path = rename_2_current_OS(f"src\{self.__settings.get('data-folder-name')}")
         all_files_in_folder = [file for file in os.listdir(data_folder_path) if os.path.isfile(os.path.join(data_folder_path, file))]
         return ListFilesResponse(
@@ -91,10 +141,13 @@ class ListFilesService(Service):
     
          
 if __name__ == "__main__":
+    r = RabbitMQConnector()
     list_files = ListFilesService()
     list_files.add_server_functions()
-    list_files.create_end_point("[::]:8080")
+    list_files.conf_rabbitmq_connection(r)
+    list_files.on_startup(list_files.handle_pending_requests)
+    """list_files.create_end_point("[::]:8080")
     service = list_files.get_service()
     service.start()
-    service.wait_for_termination()
+    service.wait_for_termination()"""
     

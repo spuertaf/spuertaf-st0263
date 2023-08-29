@@ -1,9 +1,10 @@
 from .builder import Builder
 import pkgutil
 import importlib
-from . import services
+from .. import services
+from ..patterns.rabbitmq import RabbitMQConnector
 from typing import Union
-from .service import Service
+from ..interfaces.service import Service
 
 from typeguard import typechecked
 from flask import Response
@@ -32,12 +33,13 @@ class Adapter(Builder):
     def build(
             self, 
             argument_name:str, 
-            response:Response
+            rabbitmq_connector:RabbitMQConnector,
+            response:Response=None
         ) -> Union[ValueError, Service]:
         try:
             service_to_build = self.__plug_in[argument_name]
             super().__init__(service_to_build)
-            service_built = super().build(response)
+            service_built = super().build(rabbitmq_connector,response)
             return service_built
         except KeyError:
             raise ValueError(f"Service {argument_name} is not a valid service to request.",

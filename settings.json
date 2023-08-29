@@ -6,7 +6,12 @@
             "OK-status":200,
             "ERROR-status":400
         },
-        "kafka-server" : ""
+        "rabbitmq" : {
+            "server":"54.235.255.168",
+            "port":"5672",
+            "pending-requests-topic":"pending.list_files",
+            "resolved-pending-requests-topic":"resolved.list_files"
+        }
     },
 
     "search-files-service":{
@@ -16,7 +21,12 @@
             "OK-status":200,
             "ERROR-status":400
         },
-        "kafka-server" : ""
+        "rabbitmq" : {
+            "server":"54.235.255.168",
+            "port":"5672",
+            "pending-requests-topic":"pending.search_files",
+            "resolved-pending-requests-topic":"resolved.search_files"
+        }
     },
 
     "manager-service":{
@@ -25,15 +35,25 @@
         },
         "services" : ["list-files","search-files"],
         "redirect": {
-            "list-files" : "34.198.41.234:8080",
-            "search-files" : "52.54.127.116:8080"
+            "list-files" : {
+                "server&port" : "34.198.41.234:8080",
+                "pending-requests-topic":"pending.list_files"
+            },
+            "search-files" : {
+                "server&port" : "52.54.127.116:8080",
+                "pending-requests-topic" :"pending.search_files"
+            }
         },
         "response" : {
             "OK-status":200,
             "ERROR-status":400
         },
         "host" : "0.0.0.0",
-        "port" : 8080
+        "port" : 8080,
+        "rabbitmq" : {
+            "server":"54.235.255.168",
+            "port":"5672"
+        }
     },
 
     "command" : {

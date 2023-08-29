@@ -1,11 +1,14 @@
-from ..service import Service
+from ..interfaces.service import Service
 from typing import Union
+from datetime import datetime
+import hashlib
 from .configs.contracts import list_files_service_pb2 as list_files_pb2
 from .configs.contracts.list_files_service_pb2 import ListFilesResponse  
 from .configs.contracts import list_files_service_pb2_grpc as list_files_pb2_grpc
 from .configs.contracts import search_files_service_pb2 as search_files_pb2
 from .configs.contracts.search_files_service_pb2 import SearchFilesResponse
 from .configs.contracts import search_files_service_pb2_grpc as search_files_pb2_grpc
+from ..patterns.rabbitmq import RabbitMQConnector
 import logging
 
 
@@ -14,6 +17,7 @@ from dynaconf.utils.boxing import DynaBox as ServiceSettings
 from flask import Flask, request, Response
 import grpc
 from grpc._channel import _InactiveRpcError
+from pika.exceptions import AMQPConnectionError
 
 
 class ManagerService(Service):
@@ -43,6 +47,7 @@ class ManagerService(Service):
         @self.__service.before_request
         def check_json():
                 json_request:dict = request.get_json()
+                json_request["request_ip"] = request.remote_addr
                 if json_request is None:
                     raise ValueError()
                 expected_arguments:list = self.__settings.get("end-points")[end_point_route]
@@ -53,6 +58,14 @@ class ManagerService(Service):
                 requested_service:str = json_request.get("service")
                 assert requested_service.lower() in recognized_services, f"Service {requested_service} is not a valid service to request."
                 self.__request = json_request
+                
+                
+    def assign_id_2_request(self) -> None:
+        @self.__service.before_request
+        def assign_id():
+            if self.__request is not None:
+                data = f"{self.__request['request_ip']}{datetime.now()}".encode('utf-8')
+                self.__request["id"] = hashlib.sha256(data).hexdigest()
     
     
     def make_request(self, response:Response) -> None:
@@ -61,13 +74,13 @@ class ManagerService(Service):
         if request is None:
             return  
         
-        requested_service:str = request["service"]
+        requested_service:str = self.__request["service"]
         print(requested_service)
         recognized_services:list = self.__settings.get("services")
         service_response: Union[None, ListFilesResponse, SearchFilesResponse] = None
         if requested_service == recognized_services[0]:
             #list-files
-            grpc_connection = grpc.insecure_channel(self.__settings.get("redirect").get(recognized_services[0]))
+            grpc_connection = grpc.insecure_channel(self.__settings.get("redirect").get(recognized_services[0]).get("server&port"))
             grpc_stub = list_files_pb2_grpc.ListFilesServiceStub(grpc_connection)
             list_files_request = list_files_pb2.ListFilesRequest()
             list_files_response:ListFilesResponse = grpc_stub.make_response(list_files_request)
@@ -75,7 +88,7 @@ class ManagerService(Service):
             
         elif requested_service == recognized_services[1]:
             #search-files
-            grpc_connection = grpc.insecure_channel(self.__settings.get("redirect").get(recognized_services[1]))
+            grpc_connection = grpc.insecure_channel(self.__settings.get("redirect").get(recognized_services[1]).get("server&port"))
             grpc_stub = search_files_pb2_grpc.SearchFilesStub(grpc_connection)
             search_files_request = search_files_pb2.SearchFilesRequest(file_to_search_pattern=self.__request["arguments"])
             search_files_response:SearchFilesResponse =  grpc_stub.make_response(search_files_request)
@@ -106,16 +119,41 @@ class ManagerService(Service):
             return response
     
     
-    def act_on_grpc_error(self, response:Response) -> Response:
+    def conf_rabbitmq_connection(self, rabbitmq_connector:RabbitMQConnector, reponse:Response):
+        try:
+            rabbitmq_connector.establish_connection(
+                host=self.__settings.get("rabbitmq").get("server"),
+                port=self.__settings.get("rabbitmq").get("port")
+        
+            )
+            rabbitmq_connector.establish_channel()
+            self.__rabbitmq_connector = rabbitmq_connector
+            self.__rabbitmq_up = True
+        except AMQPConnectionError:
+            self.__rabbitmq_up = False
+
+    
+    def act_on_grpc_error(
+        self,
+        response:Response
+        ) -> Response:
         @self.__service.errorhandler(_InactiveRpcError)
         def handle_grpc_error(error):
-            response.data = f"{self.__request['service']} service inactive"
+            if self.__rabbitmq_up:
+                queue_name_2_publish = self.__settings.get("redirect").get(self.__request["service"]).get("pending-requests-topic")
+                self.__rabbitmq_connector.publish(
+                    queue_name=queue_name_2_publish,
+                    message= str({
+                        "request_id":self.__request["id"],
+                        "service":self.__request["service"],
+                        "arguments":self.__request["arguments"],
+                    })
+                )
+                response.data = f"{self.__request['service']} service inactive.\nNew pending request with id {self.__request['id']} published to MOM server."
+            else:
+                response.data = f"{self.__request['service']} service inactive.\nRabbitMq service inactive; couldn't save request."
             response.status = self.__settings.get("response")["ERROR-status"]
             return response
-    
-    
-    def act_on_kafka_error(self, response:Response):
-        ...
     
     
     def execute(self):

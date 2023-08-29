@@ -4,8 +4,7 @@ Modulo para implementacion de la interfaz del servicio
 
 from abc import ABC, abstractmethod
 from typing import Union
-from .utils import check_existing_settings
-import subprocess
+from ..scripts.utils import check_existing_settings
 
 
 from typeguard import TypeCheckError
@@ -27,14 +26,9 @@ class Service(ABC):
         ...
     
     
-    def on_startup(self) -> str:
-        service_public_ip = subprocess.run(
-            "curl ifconfig.me", 
-            shell=True,
-            capture_output=True,
-            text=True
-        ).stdout
-        return service_public_ip
+    @abstractmethod
+    def conf_rabbitmq_connection():
+        ...
     
     
     @abstractmethod
