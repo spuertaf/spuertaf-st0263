@@ -16,7 +16,7 @@
 
     "search-files-service":{
         "data-folder-name" : "data",
-        "end-point" : "[::]:8081",
+        "end-point" : "[::]:8080",
         "response" : {
             "OK-status":200,
             "ERROR-status":400
