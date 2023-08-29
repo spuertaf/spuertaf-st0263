@@ -68,7 +68,7 @@
 > El patrón Builder se ha aplicado para la creación paso a paso de los diferentes microservicios, lo que en caso de cambios en la creación de estos objetos, permite tener un único modulo encargado de la misma; un único lugar donde cambiar la construcción de dichos objetos. 
 > 
 
-![Diagrama de código: Patrón de diseño Builder](Reto%20No%202%20c4b32e3bb5494781a5b2305455845dd1/Patrn_Builder.svg)
+![Diagrama de código: Patrón de diseño Builder](https://raw.githubusercontent.com/spuertaf/spuertaf-st0263/4d5188e85c41ca423864c82ccf630cea77bf2337/docs/Patr%C3%B3n%20Builder.svg)
 
 Diagrama de código: Patrón de diseño Builder
 
@@ -80,7 +80,7 @@ Diagrama de código: Patrón de diseño Builder
 > El patrón Adapter se ha aplicado para comunicarle al Builder según los argumentos pasados por consola que tipo de microservicio debía de construir.   
 > 
 
-![Diagrama de código: Patrón de diseño Adapter](Reto%20No%202%20c4b32e3bb5494781a5b2305455845dd1/Patrn_Adapter.svg)
+![Diagrama de código: Patrón de diseño Adapter](https://raw.githubusercontent.com/spuertaf/spuertaf-st0263/4d5188e85c41ca423864c82ccf630cea77bf2337/docs/Patr%C3%B3n%20Adapter.svg)
 
 Diagrama de código: Patrón de diseño Adapter
 
@@ -200,7 +200,7 @@ spuertaf-st0263:.
 > El siguiente diagrama proporcionará una comprensión rápida de cómo los paquetes se organizan y cómo interactúan entre sí en el contexto general del sistema.
 > 
 
-![Diagrama de paquetes: Dependencias y versiones. ](Reto%20No%202%20c4b32e3bb5494781a5b2305455845dd1/Diagrama_de_paquetes.svg)
+![Diagrama de paquetes: Dependencias y versiones. ](https://raw.githubusercontent.com/spuertaf/spuertaf-st0263/4d5188e85c41ca423864c82ccf630cea77bf2337/docs/Diagrama%20de%20paquetes.svg)
 
 Diagrama de paquetes: Dependencias y versiones. 
 
@@ -234,7 +234,7 @@ Werkzeug==2.3.7
 > El siguiente diagrama destaca que servicios de Amazon Web Services (AWS) son empleados para lograr un despliegue eficiente y escalable.
 > 
 
-![Diagrama de despliegue: Infraestructura de AWS usada.](Reto%20No%202%20c4b32e3bb5494781a5b2305455845dd1/Diagrama_de_despliegue.svg)
+![Diagrama de despliegue: Infraestructura de AWS usada.](https://raw.githubusercontent.com/spuertaf/spuertaf-st0263/4d5188e85c41ca423864c82ccf630cea77bf2337/docs/Diagrama%20de%20despliegue.svg)
 
 Diagrama de despliegue: Infraestructura de AWS usada.
 
