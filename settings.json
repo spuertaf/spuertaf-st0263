@@ -31,7 +31,7 @@
 
     "manager-service":{
         "end-points" : {
-            "/list-files" : ["service", "arguments"]
+            "/list-files" : ["service", "arguments", "email"]
         },
         "services" : ["list-files","search-files"],
         "redirect": {

@@ -66,6 +66,11 @@ class ListFilesService(GrpcService):
         rabbitmq_connector.establish_channel()
         self.__rabbitmq_connector = rabbitmq_connector
     
+    
+    def send_email(self, receiver: str, pending_request: str, request_id: str, response: str):
+        return super().send_email(receiver, pending_request, request_id, response)
+    
+    
     #revisar esto
     def handle_pending_requests(
         self, 
@@ -84,11 +89,12 @@ class ListFilesService(GrpcService):
         pending_request:json = pending_requests[0]
         pending_request['response'] = pending_request_reponse.files
         
-        rabbitmq_connector.publish(
-            queue_name=queue_name_2_publish, #must be in settings
-            message= str(pending_request),
+        self.send_email(
+            receiver=pending_request["email"],
+            pending_request='*',
+            request_id=pending_request["request_id"],
+            response = pending_request_reponse.files
         )
-        print(pending_requests)
         pending_requests.pop(0)
         return self.handle_pending_requests(rabbitmq_connector, queue_name_2_publish, pending_requests)
         

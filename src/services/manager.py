@@ -68,6 +68,7 @@ class ManagerService(Service):
                 self.__request["id"] = hashlib.sha256(data).hexdigest()
     
     
+    ###revisar esto
     def make_request(self, response:Response) -> None:
         request = self.__request
         
@@ -147,6 +148,7 @@ class ManagerService(Service):
                         "request_id":self.__request["id"],
                         "service":self.__request["service"],
                         "arguments":self.__request["arguments"],
+                        "email":self.__request["email"]
                     })
                 )
                 response.data = f"{self.__request['service']} service inactive.\nNew pending request with id {self.__request['id']} published to MOM server."
