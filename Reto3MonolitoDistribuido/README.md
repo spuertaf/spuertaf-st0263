@@ -80,7 +80,7 @@ Reto3MonolitoDistribuido
 > El siguiente diagrama destaca que servicios de Amazon Web Services (AWS) son empleados para lograr un despliegue eficiente y escalable.
 > 
 
-![Diagrama de despliegue: Infraestructura de AWS usada.](Reto%20No%203%206e49511c40b44c60abf2ecbb7aa396f4/ArquitecturaMonolitica.svg)
+![Diagrama de despliegue: Infraestructura de AWS usada.](https://raw.githubusercontent.com/spuertaf/spuertaf-st0263/dd2bc232b1d98b8cc3c042bdfb498558c7d55d46/Reto3MonolitoDistribuido/docs/ArquitecturaMonolitica.svg)
 
 Diagrama de despliegue: Infraestructura de AWS usada.
 
