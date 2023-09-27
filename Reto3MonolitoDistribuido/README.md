@@ -4,7 +4,7 @@
 📝 Notas
 
 - Materia: Tópicos especiales en Telemática (ST0263)
-- Estudiante: Santiago Puerta Florez ([spuertaf@eafit.edu.co](mailto:spuertaf@eafit.edu.co))
+- Estudiantes: Daniel Jaramillo Valencia ([djaramillv@eafit.edu.co](mailto:djaramillv@eafit.edu.co)) | Santiago Puerta Florez ([spuertaf@eafit.edu.co](mailto:spuertaf@eafit.edu.co)) 
 - Profesor: Edwin Nelson Montoya Munera ([emontoya@eafit.edu.co](mailto:emontoya@eafit.edu.co))
 </aside>
 
