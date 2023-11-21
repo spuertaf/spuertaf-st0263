@@ -63,7 +63,7 @@ class KafkaProductor:
             raise ValueError()
         self._kafka_producer.send(
             self._topic_name,
-            value=message.encode('utf-8')
+            value=message.encode()
         )
     
     def flush(self):

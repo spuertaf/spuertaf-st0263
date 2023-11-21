@@ -148,5 +148,5 @@ class TradesStreaming:
 
 if __name__ == "__main__":
     productor = KafkaProductor(topic_name="tickers", bootstrap_servers=['34.27.126.27:9092'])
-    TradesStreaming("clbp1vpr01qp535t12mgclbp1vpr01qp535t12n0", ["BINANCE:BTCUSDT"], productor).execute()
+    TradesStreaming("clbp1vpr01qp535t12mgclbp1vpr01qp535t12n0", ["BINANCE:BTCUSDT", "BINANCE:ETHUSDT"], productor).execute()
     
