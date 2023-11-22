@@ -136,6 +136,8 @@ En la presente sección se mostrara la arquitectura de referencia recomendada pa
 
 ![Untitled](https://raw.githubusercontent.com/spuertaf/spuertaf-st0263/main/Proyecto3ArquitecturaStreaming/docs/img/arqui_ref.png)
 
+![Untitled](https://raw.githubusercontent.com/spuertaf/spuertaf-st0263/041b629459a04136ad8604129a3272eafb15cae9/Proyecto3ArquitecturaStreaming/docs/img/arqui_final.svg)
+
 ## Guía de uso
 
 La siguiente guía brindará los pasos a seguir para un correcto funcionamiento y ejecución del software.
