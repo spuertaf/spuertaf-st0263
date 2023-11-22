@@ -1,4 +1,7 @@
 from kakfa_productor import KafkaProductor
+import env_vars
+import os
+
 
 from websocket import WebSocketApp
 
@@ -147,6 +150,14 @@ class TradesStreaming:
 
 
 if __name__ == "__main__":
-    productor = KafkaProductor(topic_name="tickers", bootstrap_servers=['34.27.126.27:9092'])
-    TradesStreaming("clbp1vpr01qp535t12mgclbp1vpr01qp535t12n0", ["BINANCE:BTCUSDT", "BINANCE:ETHUSDT"], productor).execute()
+    productor = KafkaProductor(
+        topic_name="tickers", 
+        bootstrap_servers=[os.environ.get('KAFKA_SEVER')]
+    )
+    
+    TradesStreaming(
+        os.environ.get('API_SECRET'), 
+        ["BINANCE:BTCUSDT", "BINANCE:ETHUSDT"], 
+        productor
+    ).execute()
     

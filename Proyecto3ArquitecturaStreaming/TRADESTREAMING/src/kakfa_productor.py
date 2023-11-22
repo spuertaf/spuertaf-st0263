@@ -71,8 +71,3 @@ class KafkaProductor:
         Flushea los mensajes pendientes en el productor.
         """
         self._kafka_producer.flush()
-
-if __name__ == "__main__":
-    producer = KafkaProductor(topic_name="mi_tema", bootstrap_servers=['34.27.126.27:9092'])
-    producer.send("otra prueba mas")
-    producer.flush()
